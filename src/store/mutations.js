@@ -37,4 +37,22 @@ export default {
     state.selectedPlayers.splice(playerIndex, 1);
     state.allPlayers.unshift(player);
   },
+
+  /**
+   * @name addPlayerToOut
+   * @param {object} state
+   * @param {string} playerName
+   */
+  [Mutation.ADD_PLAYER_TO_OUT] (state, playerName) {
+    state.outPlayer = playerName;
+  },
+
+  /**
+   * @name addPlayerToIn
+   * @param {object} state
+   * @param {string} playerName
+   */
+  [Mutation.ADD_PLAYER_TO_IN] (state, playerName) {
+    state.inPlayer = playerName;
+  },
 };

@@ -7,7 +7,9 @@
     :substitute-players="substitutes"
     :is-lineup-at-maximum="isLineupAtMaximum"
     @pickPlayer="addPlayerToLineup"
-    @unpickPlayer="removePlayerFromLineup">
+    @unpickPlayer="removePlayerFromLineup"
+    @outPlayerSelected="addPlayerToOut"
+    @inPlayerSelected="addPlayerToIn">
   </squad-selection>
 </template>
 
@@ -63,6 +65,8 @@ export default {
     ...mapMutations([
       'addPlayerToLineup',
       'removePlayerFromLineup',
+      'addPlayerToOut',
+      'addPlayerToIn',
     ]),
   },
 };

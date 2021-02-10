@@ -1,8 +1,14 @@
 <template>
-  <v-container>
+  <v-container class="selection">
     <v-row class="top-part">
-      <v-col sm="9">{{ teamName }}</v-col>
-      <v-col sm="3">
+      <v-col
+        class="text-h6"
+        sm="9">
+        {{ teamName }}
+      </v-col>
+      <v-col
+        class="d-flex justify-end"
+        sm="3">
         <v-btn :disabled="!isLineupAtMaximum">Confirm Selection</v-btn>
       </v-col>
     </v-row>
@@ -10,10 +16,13 @@
       <v-col
         v-for="option in columnConfig"
         :key="option.title"
-        class="listing"
-        cols="12"
-        sm="4">
-        <v-card>{{ option.title }}</v-card>
+        class="listing rounded-lg"
+        cols="4">
+        <v-card
+          class="text-h6"
+          elevation="0">
+          {{ option.title }}
+        </v-card>
         <squad-list
           :no-data-text="option.noDataText"
           :list-type="option.type"
@@ -22,7 +31,9 @@
           :out-players="outPlayers"
           :is-lineup-at-maximum="isLineupAtMaximum"
           @pickPlayer="value => $emit('pickPlayer', value)"
-          @unpickPlayer="value => $emit('unpickPlayer', value)">
+          @unpickPlayer="value => $emit('unpickPlayer', value)"
+          @outPlayerSelected="value => $emit('outPlayerSelected', value)"
+          @inPlayerSelected="value => $emit('inPlayerSelected', value)">
         </squad-list>
       </v-col>
     </v-row>
@@ -98,13 +109,13 @@ export default {
           title: 'Lineup',
           data: this.selectedPlayers,
           type: 'lineup',
-          noDataText: 'No Data',
+          noDataText: 'You haven’t selected any player for lineup yet.',
         },
         {
           title: 'Substitute',
           data: this.substitutePlayers,
           type: 'substitute',
-          noDataText: 'No Data',
+          noDataText: 'Please pick 11 players for lineup before creating any substitutions',
         },
       ];
     },
@@ -127,13 +138,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .top-part {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .listing {
-    overflow: hidden;
-    height: 550px;
+  .selection {
+    .top-part {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .listing {
+      overflow: hidden;
+      height: 550px;
+      box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+    }
   }
 </style>

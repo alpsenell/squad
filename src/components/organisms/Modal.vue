@@ -1,37 +1,58 @@
 <template>
   <div class="modal-overlay">
     <div
-      class="modal"
+      class="modal rounded-lg"
       :style="{ width: `${sizing.width}px`, height: `${sizing.height}px` }">
       <v-row>
         <v-col
           class="d-flex"
-          cols="12"
-          sm="12">
+          cols="10">
           <v-select
             id="in-players"
             :items="inPlayers"
+            :rules="['required']"
             label="OUT PLAYER"
-            outlined>
+            outlined
+            @change="value => $emit('outPlayerSelected', value)">
           </v-select>
         </v-col>
         <v-col
           class="d-flex"
-          cols="12"
-          sm="12">
+          cols="10">
           <v-select
             id="substitute-minute"
+            :rules="['required']"
             label="IN PLAYER"
             :items="inPlayers"
-            outlined>
+            outlined
+            @change="value => $emit('inPlayerSelected', value)">
           </v-select>
         </v-col>
-        <v-col>
+        <v-col cols="10">
           <v-text-field
             label="SUBSTITUTION MINUTE"
             :rules="['required']"
             hide-details="auto">
           </v-text-field>
+        </v-col>
+      </v-row>
+      <v-row class="d-flex justify-end">
+        <v-col cols="4">
+          <v-btn
+            class="cancel-button rounded-lg"
+            text
+            elevation="0"
+            @click="$emit('closeModal')">Cancel
+          </v-btn>
+        </v-col>
+        <v-col cols="3">
+          <v-btn
+            class="rounded-lg"
+            :disabled="confirmButtonStatus"
+            color="primary"
+            elevation="0"
+            @click="$emit('confirmModal')">Confirm
+          </v-btn>
         </v-col>
       </v-row>
     </div>
@@ -79,6 +100,10 @@ export default {
     align-items: center;
     .modal {
       background-color: white;
+      padding: 30px;
+      .cancel-button {
+        color: #e63846;
+      }
     }
   }
 </style>

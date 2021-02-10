@@ -6,4 +6,6 @@ export const Mutation = {
   SET_CLUB_PLAYERS: 'setClubPlayers',
   ADD_PLAYER_TO_LINEUP: 'addPlayerToLineup',
   REMOVE_PLAYER_FROM_LINEUP: 'removePlayerFromLineup',
+  ADD_PLAYER_TO_OUT: 'addPlayerToOut',
+  ADD_PLAYER_TO_IN: 'addPlayerToIn',
 };

@@ -1,11 +1,14 @@
 <template>
-  <div class="player-listing">
+  <div
+    class="player-listing"
+    :class="{ 'd-flex justify-center align-center': noData }">
     <div v-if="hasPlayer || canAddSubstitute">
       <v-card
         v-for="player in players"
         :key="player.name"
-        class="mb-2">
-        <v-list-item>
+        elevation="0"
+        class="m-0 p-0 mb-2">
+        <v-list-item class="px-0">
           <v-list-item-avatar size="34">
             <img :src="player.image_url" alt="">
           </v-list-item-avatar>
@@ -15,7 +18,7 @@
           </v-list-item-content>
           <v-btn
             v-if="isSelection || isLineup"
-            color="deep-purple lighten-2"
+            :color="isSelection ? 'deep-purple lighten-2' : 'error'"
             :disabled="isLineupAtMaximum && isSelection"
             :text="true"
             @click="handleClick(player)">
@@ -24,23 +27,34 @@
         </v-list-item>
       </v-card>
     </div>
-    <div v-else-if="(isLineup || isSelection) && !hasPlayer">{{ noDataText }}</div>
-    <div v-else-if="isSubstitute && !canAddSubstitute">{{ noDataText }}</div>
+    <div
+      v-else-if="(isLineup || isSelection) && !hasPlayer"
+      class="no-data-text text-center">
+      {{ noDataText }}
+    </div>
+    <div
+      v-else-if="isSubstitute && !canAddSubstitute"
+      class="no-data-text text-center">
+      {{ noDataText }}
+    </div>
     <div v-if="isSubstitute && canAddSubstitute">
       <v-btn
         :text="true"
         :disabled="!canAddSubstitute"
+        class="add-substitute-text text-caption text-capitalize"
         @click="openAddSubstituteModal">
-        <v-icon left>
-          mdi-plus
-        </v-icon>
-        Add Substitute
+        <v-icon left>mdi-plus</v-icon>
+        Add Substitution
       </v-btn>
     </div>
     <modal
       v-if="addSubstituteModal"
       :in-players="inPlayers"
-      :out-players="outPlayers">
+      :out-players="outPlayers"
+      @outPlayerSelected="value => $emit('outPlayerSelected', value)"
+      @inPlayerSelected="value => $emit('inPlayerSelected', value)"
+      @closeModal="closeModal"
+      @confirmModal="setSubstitutePlayer">
     </modal>
   </div>
 </template>
@@ -147,6 +161,14 @@ export default {
     canAddSubstitute () {
       return this.isSubstitute && this.isLineupAtMaximum;
     },
+
+    /**
+     * @return {boolean}
+     */
+    noData () {
+      return ((this.isLineup || this.isSelection) && !this.hasPlayer)
+        || (this.isSubstitute && !this.canAddSubstitute);
+    },
   },
 
   methods: {
@@ -170,6 +192,28 @@ export default {
     openAddSubstituteModal () {
       this.addSubstituteModal = true;
     },
+
+    /**
+     * @return {void}
+     */
+    closeAddSubstituteModal () {
+      this.addSubstituteModal = false;
+    },
+
+    /**
+     * @return {void}
+     */
+    setSubstitutePlayer () {
+      console.log('substitute event');
+    },
+
+    /**
+     * @return {void}
+     */
+    closeModal () {
+      this.closeAddSubstituteModal();
+      this.$emit('closeModal');
+    },
   },
 };
 </script>
@@ -181,5 +225,11 @@ export default {
     width: 100%;
     height: 100%;
     box-sizing: content-box;
+    .no-data-text {
+      color: #586f8f;
+    }
+    .add-substitute-text {
+      color: #12c990;
+    }
   }
 </style>
