@@ -1,8 +1,16 @@
 <template>
   <div
     class="player-listing"
-    :class="{ 'd-flex justify-center align-center': noData }">
-    <div v-if="hasPlayer">
+    :class="{ 'd-flex justify-center align-center': noData || squadConfirmed && isSelection }">
+    <div v-if="squadConfirmed && isSelection">
+      <v-img
+        src="../../assets/clubLogo.png"
+        max-height="64"
+        max-width="64">
+      </v-img>
+      <p>{{ teamName }}</p>
+    </div>
+    <div v-else-if="hasPlayer">
       <v-card
         v-if="isSelection || isLineup"
         v-for="player in players"
@@ -18,7 +26,7 @@
             <v-list-item-subtitle>{{ player.position.name }}</v-list-item-subtitle>
           </v-list-item-content>
           <v-btn
-            v-if="isSelection || isLineup"
+            v-if="!squadConfirmed"
             :color="isSelection ? 'deep-purple lighten-2' : 'error'"
             :disabled="isLineupAtMaximum && isSelection"
             :text="true"
@@ -29,8 +37,8 @@
       </v-card>
       <v-card
         v-else
-        v-for="(substitutes, index) in players"
-        :key="index"
+        v-for="substitutes in players"
+        :key="substitutes.inPlayer.display_name"
         elevation="0"
         class="m-0 p-0 mb-2">
         <v-list-item class="px-0">
@@ -65,7 +73,7 @@
       class="no-data-text text-center">
       {{ noDataText }}
     </div>
-    <div v-if="isSubstitute && canAddSubstitute">
+    <div v-if="isSubstitute && canAddSubstitute && !squadConfirmed">
       <v-btn
         :text="true"
         :disabled="!canAddSubstitute"
@@ -80,8 +88,7 @@
       :in-players="inPlayers"
       :out-players="outPlayers"
       @substituteAdded="substituteAdded"
-      @closeModal="closeModal"
-      @confirmModal="setSubstitutePlayer">
+      @closeModal="closeModal">
     </modal>
   </div>
 </template>
@@ -96,6 +103,13 @@ export default {
   },
 
   props: {
+    /**
+     * @property {boolean} squadConfirmed
+     */
+    squadConfirmed: {
+      type: Boolean,
+      required: true,
+    },
     /**
      * @property {array} players
      */
@@ -143,6 +157,13 @@ export default {
      */
     inPlayers: {
       type: Array,
+      required: true,
+    },
+    /**
+     * @property {string} teamName
+     */
+    teamName: {
+      type: String,
       required: true,
     },
   },
@@ -201,7 +222,7 @@ export default {
      */
     noData () {
       return ((this.isLineup || this.isSelection) && !this.hasPlayer)
-        || (this.isSubstitute && !this.canAddSubstitute);
+        || (this.isSubstitute && !this.canAddSubstitute && !this.isSubsAtMaximum);
     },
   },
 
@@ -232,13 +253,6 @@ export default {
      */
     closeAddSubstituteModal () {
       this.addSubstituteModal = false;
-    },
-
-    /**
-     * @return {void}
-     */
-    setSubstitutePlayer () {
-      console.log('substitute event');
     },
 
     /**

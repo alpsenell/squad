@@ -1,51 +1,76 @@
 <template>
-  <v-container class="selection">
-    <v-row class="top-part">
-      <v-col
-        class="text-h6"
-        sm="9">
-        {{ teamName }}
-      </v-col>
-      <v-col
-        class="d-flex justify-end"
-        sm="3">
-        <v-btn :disabled="!isLineupAtMaximum">Confirm Selection</v-btn>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col
-        v-for="option in columnConfig"
-        :key="option.title"
-        class="listing rounded-lg"
-        cols="4">
-        <v-card
+  <div id="main-page">
+    <custom-header></custom-header>
+    <v-container class="selection mt-5 rounded-lg">
+      <v-row class="top-part">
+        <v-col
+          v-if="!squadConfirmed"
           class="text-h6"
-          elevation="0">
-          {{ option.title }}
-        </v-card>
-        <squad-list
-          :no-data-text="option.noDataText"
-          :list-type="option.type"
-          :players="option.data"
-          :in-players="inPlayers"
-          :out-players="outPlayers"
-          :is-lineup-at-maximum="isLineupAtMaximum"
-          :is-subs-at-maximum="isSubsAtMaximum"
-          @pickPlayer="value => $emit('pickPlayer', value)"
-          @unpickPlayer="value => $emit('unpickPlayer', value)"
-          @substituteAdded="value => $emit('substituteAdded', value)">
-        </squad-list>
-      </v-col>
-    </v-row>
-  </v-container>
+          sm="9">
+          {{ teamName }}
+        </v-col>
+        <v-col
+          v-if="!squadConfirmed"
+          class="d-flex justify-end"
+          sm="3">
+          <v-btn
+            :disabled="!isLineupAtMaximum"
+            color="primary"
+            @click="$emit('confirmSelection')">
+            Confirm
+          </v-btn>
+        </v-col>
+        <v-col cols="12" class="fill-height d-flex flex-column justify-center align-center">
+          <span class="text-h5">
+            <v-icon
+              class="mr-0"
+              large
+              left>
+              mdi-check-circle
+            </v-icon>
+              Squad saved successfully
+          </span>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col
+          v-for="option in columnConfig"
+          :key="option.title"
+          class="listing rounded-lg"
+          cols="4">
+          <v-card
+            class="text-h6"
+            elevation="0">
+            {{ option.title }}
+          </v-card>
+          <squad-list
+            :no-data-text="option.noDataText"
+            :list-type="option.type"
+            :players="option.data"
+            :team-name="teamName"
+            :in-players="inPlayers"
+            :squad-confirmed="squadConfirmed"
+            :out-players="outPlayers"
+            :is-lineup-at-maximum="isLineupAtMaximum"
+            :is-subs-at-maximum="isSubsAtMaximum"
+            @pickPlayer="value => $emit('pickPlayer', value)"
+            @unpickPlayer="value => $emit('unpickPlayer', value)"
+            @substituteAdded="value => $emit('substituteAdded', value)">
+          </squad-list>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script>
 import SquadList from '../organisms/SquadList.vue';
+import CustomHeader from '../organisms/CustomHeader.vue';
 
 export default {
   components: {
     SquadList,
+    CustomHeader,
   },
 
   props: {
@@ -53,6 +78,13 @@ export default {
      * @property {boolean} loadStatus
      */
     loadStatus: {
+      type: Boolean,
+      required: true,
+    },
+    /**
+     * @property {boolean} squadConfirmed
+     */
+    squadConfirmed: {
       type: Boolean,
       required: true,
     },
@@ -145,16 +177,23 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .selection {
-    .top-part {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .listing {
-      overflow: hidden;
-      height: 550px;
-      box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+  #main-page {
+    background-color: #e9eaeb;
+    height: 100vh;
+    width: 100vw;
+    .selection {
+      background-color: white;
+      .top-part {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .listing {
+        overflow: hidden;
+        height: 550px;
+        padding-bottom: 30px;
+        box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+      }
     }
   }
 </style>

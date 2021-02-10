@@ -1,6 +1,7 @@
 <template>
   <squad-selection
     :load-status="loadStatus"
+    :squad-confirmed="squadConfirmed"
     :all-players="allPlayers"
     :team-name="teamName"
     :selected-players="selectedPlayers"
@@ -9,7 +10,8 @@
     :is-subs-at-maximum="isSubsAtMaximum"
     @pickPlayer="addPlayerToLineup"
     @unpickPlayer="removePlayerFromLineup"
-    @substituteAdded="substituteAdded">
+    @substituteAdded="substituteAdded"
+    @confirmSelection="confirmSelection">
   </squad-selection>
 </template>
 
@@ -26,6 +28,7 @@ export default {
   data () {
     return {
       loadStatus: true,
+      squadConfirmed: false,
     };
   },
 
@@ -54,7 +57,7 @@ export default {
      * @return {boolean}
      */
     isSubsAtMaximum () {
-      return this.selectedPlayers.length === SubsSelectionValue;
+      return this.substitutes.length === SubsSelectionValue;
     },
   },
 
@@ -93,6 +96,10 @@ export default {
         outPlayer: outPlayerPurified,
         substituteMinute,
       });
+    },
+
+    confirmSelection () {
+      this.squadConfirmed = true;
     },
   },
 };
