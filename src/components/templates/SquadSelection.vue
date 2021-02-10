@@ -20,7 +20,10 @@
             Confirm
           </v-btn>
         </v-col>
-        <v-col cols="12" class="fill-height d-flex flex-column justify-center align-center">
+        <v-col
+          v-if="squadConfirmed"
+          cols="12"
+          class="fill-height d-flex flex-column justify-center align-center">
           <span class="text-h5">
             <v-icon
               class="mr-0"
@@ -34,6 +37,7 @@
       </v-row>
       <v-row>
         <v-col
+          v-if="!loadStatus"
           v-for="option in columnConfig"
           :key="option.title"
           class="listing rounded-lg"
@@ -58,6 +62,13 @@
             @substituteAdded="value => $emit('substituteAdded', value)">
           </squad-list>
         </v-col>
+        <v-skeleton-loader
+          v-else
+          class="mx-auto"
+          min-width="300"
+          height="550"
+          type="image">
+        </v-skeleton-loader>
       </v-row>
     </v-container>
   </div>
