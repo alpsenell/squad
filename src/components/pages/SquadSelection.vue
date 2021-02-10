@@ -6,17 +6,17 @@
     :selected-players="selectedPlayers"
     :substitute-players="substitutes"
     :is-lineup-at-maximum="isLineupAtMaximum"
+    :is-subs-at-maximum="isSubsAtMaximum"
     @pickPlayer="addPlayerToLineup"
     @unpickPlayer="removePlayerFromLineup"
-    @outPlayerSelected="addPlayerToOut"
-    @inPlayerSelected="addPlayerToIn">
+    @substituteAdded="substituteAdded">
   </squad-selection>
 </template>
 
 <script>
 import { mapActions, mapMutations, mapState } from 'vuex';
 import SquadSelection from '../templates/SquadSelection.vue';
-import { ClubIds, LineupSelectionValue } from '../../enums/CommonEnums';
+import { ClubIds, LineupSelectionValue, SubsSelectionValue } from '../../enums/CommonEnums';
 
 export default {
   components: {
@@ -49,6 +49,13 @@ export default {
     isLineupAtMaximum () {
       return this.selectedPlayers.length === LineupSelectionValue;
     },
+
+    /**
+     * @return {boolean}
+     */
+    isSubsAtMaximum () {
+      return this.selectedPlayers.length === SubsSelectionValue;
+    },
   },
 
   async beforeMount () {
@@ -65,9 +72,28 @@ export default {
     ...mapMutations([
       'addPlayerToLineup',
       'removePlayerFromLineup',
-      'addPlayerToOut',
-      'addPlayerToIn',
+      'addSubstitute',
     ]),
+
+    /**
+     * @param {string} inPlayer
+     * @param {string} outPlayer
+     * @param {string} substituteMinute
+     */
+    substituteAdded ({ inPlayer, outPlayer, substituteMinute }) {
+      const inPlayerPurified = this.allPlayers.find(
+        (player) => player.display_name === inPlayer,
+      );
+      const outPlayerPurified = this.selectedPlayers.find(
+        (player) => player.display_name === outPlayer,
+      );
+
+      this.addSubstitute({
+        inPlayer: inPlayerPurified,
+        outPlayer: outPlayerPurified,
+        substituteMinute,
+      });
+    },
   },
 };
 </script>

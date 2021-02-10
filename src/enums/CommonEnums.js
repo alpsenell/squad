@@ -7,3 +7,5 @@ export const ClubIds = {
 };
 
 export const LineupSelectionValue = 11;
+
+export const SubsSelectionValue = 3;

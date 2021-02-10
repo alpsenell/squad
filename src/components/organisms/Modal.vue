@@ -8,30 +8,30 @@
           class="d-flex"
           cols="10">
           <v-select
-            id="in-players"
-            :items="inPlayers"
-            :rules="['required']"
+            id="out-players"
+            :items="outPlayers"
+            v-model="outPlayer"
             label="OUT PLAYER"
-            outlined
-            @change="value => $emit('outPlayerSelected', value)">
+            outlined>
           </v-select>
         </v-col>
         <v-col
           class="d-flex"
           cols="10">
           <v-select
-            id="substitute-minute"
-            :rules="['required']"
+            id="in-players"
+            v-model="inPlayer"
             label="IN PLAYER"
             :items="inPlayers"
-            outlined
-            @change="value => $emit('inPlayerSelected', value)">
+            outlined>
           </v-select>
         </v-col>
         <v-col cols="10">
           <v-text-field
+            ref="substituteMinute"
             label="SUBSTITUTION MINUTE"
-            :rules="['required']"
+            v-model="substituteMinute"
+            :rules="substituteMinuteRule"
             hide-details="auto">
           </v-text-field>
         </v-col>
@@ -48,10 +48,10 @@
         <v-col cols="3">
           <v-btn
             class="rounded-lg"
-            :disabled="confirmButtonStatus"
+            :disabled="disableConfirmButton"
             color="primary"
             elevation="0"
-            @click="$emit('confirmModal')">Confirm
+            @click="confirmSubstitute">Confirm
           </v-btn>
         </v-col>
       </v-row>
@@ -82,6 +82,48 @@ export default {
     inPlayers: {
       type: Array,
       required: true,
+    },
+  },
+
+  data () {
+    return {
+      substituteMinuteRule: [
+        (value) => {
+          const pattern = /^\d+$/;
+          return pattern.test(value) || 'Please Enter number';
+        },
+        (value) => (value <= 120 && value > 0) || 'It should be less than 120 and greater than 0',
+      ],
+      substituteMinute: '',
+      inPlayer: '',
+      outPlayer: '',
+    };
+  },
+
+  computed: {
+    /**
+     * @return {boolean}
+     */
+    disableConfirmButton () {
+      return this.outPlayer === ''
+        || this.inPlayer === ''
+        || this.substituteMinute === ''
+        || !/^\d+$/.test(this.substituteMinute)
+        || this.substituteMinute > 120
+        || this.substituteMinute <= 0;
+    },
+  },
+
+  methods: {
+    /**
+     * @return {void}
+     */
+    confirmSubstitute () {
+      this.$emit('substituteAdded', {
+        inPlayer: this.inPlayer,
+        outPlayer: this.outPlayer,
+        substituteMinute: this.substituteMinute,
+      });
     },
   },
 };

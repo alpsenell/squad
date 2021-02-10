@@ -39,20 +39,11 @@ export default {
   },
 
   /**
-   * @name addPlayerToOut
+   * @name addSubstitute
    * @param {object} state
-   * @param {string} playerName
+   * @param {string} config
    */
-  [Mutation.ADD_PLAYER_TO_OUT] (state, playerName) {
-    state.outPlayer = playerName;
-  },
-
-  /**
-   * @name addPlayerToIn
-   * @param {object} state
-   * @param {string} playerName
-   */
-  [Mutation.ADD_PLAYER_TO_IN] (state, playerName) {
-    state.inPlayer = playerName;
+  [Mutation.ADD_SUBSTITUTE] (state, { inPlayer, outPlayer, substituteMinute }) {
+    state.substitutes.unshift({ inPlayer, outPlayer, substituteMinute });
   },
 };

@@ -30,10 +30,10 @@
           :in-players="inPlayers"
           :out-players="outPlayers"
           :is-lineup-at-maximum="isLineupAtMaximum"
+          :is-subs-at-maximum="isSubsAtMaximum"
           @pickPlayer="value => $emit('pickPlayer', value)"
           @unpickPlayer="value => $emit('unpickPlayer', value)"
-          @outPlayerSelected="value => $emit('outPlayerSelected', value)"
-          @inPlayerSelected="value => $emit('inPlayerSelected', value)">
+          @substituteAdded="value => $emit('substituteAdded', value)">
         </squad-list>
       </v-col>
     </v-row>
@@ -81,6 +81,13 @@ export default {
      * @property {boolean} isLineupAtMaximum
      */
     isLineupAtMaximum: {
+      type: Boolean,
+      required: true,
+    },
+    /**
+     * @property {boolean} isSubsAtMaximum
+     */
+    isSubsAtMaximum: {
       type: Boolean,
       required: true,
     },

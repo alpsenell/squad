@@ -18,5 +18,6 @@ module.exports = {
     'space-before-function-paren': ['error', 'always'],
     'no-restricted-syntax': ['error', 'WithStatement', 'BinaryExpression[operator=in]'],
     'vue/valid-v-for': 'off',
+    'vue/no-use-v-if-with-v-for': 'off',
   },
 };

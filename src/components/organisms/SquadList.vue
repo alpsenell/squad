@@ -2,10 +2,11 @@
   <div
     class="player-listing"
     :class="{ 'd-flex justify-center align-center': noData }">
-    <div v-if="hasPlayer || canAddSubstitute">
+    <div v-if="hasPlayer">
       <v-card
+        v-if="isSelection || isLineup"
         v-for="player in players"
-        :key="player.name"
+        :key="player.display_name"
         elevation="0"
         class="m-0 p-0 mb-2">
         <v-list-item class="px-0">
@@ -24,6 +25,33 @@
             @click="handleClick(player)">
             {{ buttonText }}
           </v-btn>
+        </v-list-item>
+      </v-card>
+      <v-card
+        v-else
+        v-for="(substitutes, index) in players"
+        :key="index"
+        elevation="0"
+        class="m-0 p-0 mb-2">
+        <v-list-item class="px-0">
+          <v-list-item-avatar size="34">
+            <img :src="substitutes.inPlayer.image_url" alt="">
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <v-list-item-title class="headline mb-1">
+              {{ substitutes.inPlayer.display_name }}
+            </v-list-item-title>
+            <v-list-item-subtitle>{{ substitutes.inPlayer.position.name }}</v-list-item-subtitle>
+          </v-list-item-content>
+          <span class="text-caption">
+            <v-icon
+              class="mr-0"
+              small
+              left>
+              mdi-arrow-up
+            </v-icon>
+              {{ `${substitutes.substituteMinute}'` }}
+          </span>
         </v-list-item>
       </v-card>
     </div>
@@ -51,8 +79,7 @@
       v-if="addSubstituteModal"
       :in-players="inPlayers"
       :out-players="outPlayers"
-      @outPlayerSelected="value => $emit('outPlayerSelected', value)"
-      @inPlayerSelected="value => $emit('inPlayerSelected', value)"
+      @substituteAdded="substituteAdded"
       @closeModal="closeModal"
       @confirmModal="setSubstitutePlayer">
     </modal>
@@ -94,6 +121,13 @@ export default {
      * @property {boolean} isLineupAtMaximum
      */
     isLineupAtMaximum: {
+      type: Boolean,
+      required: true,
+    },
+    /**
+     * @property {boolean} isSubsAtMaximum
+     */
+    isSubsAtMaximum: {
       type: Boolean,
       required: true,
     },
@@ -159,7 +193,7 @@ export default {
      * @return {boolean}
      */
     canAddSubstitute () {
-      return this.isSubstitute && this.isLineupAtMaximum;
+      return this.isSubstitute && this.isLineupAtMaximum && !this.isSubsAtMaximum;
     },
 
     /**
@@ -213,6 +247,14 @@ export default {
     closeModal () {
       this.closeAddSubstituteModal();
       this.$emit('closeModal');
+    },
+
+    /**
+     * @return {void}
+     */
+    substituteAdded (value) {
+      this.closeAddSubstituteModal();
+      this.$emit('substituteAdded', value);
     },
   },
 };
