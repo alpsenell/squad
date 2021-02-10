@@ -5,7 +5,7 @@ module.exports = {
   },
   extends: [
     'plugin:vue/essential',
-    '@vue/airbnb',
+    'airbnb-base',
   ],
   parserOptions: {
     ecmaVersion: 2020,
@@ -14,5 +14,9 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-else-return': ['error'],
+    'no-param-reassign': 'off',
+    'space-before-function-paren': ['error', 'always'],
+    'no-restricted-syntax': ['error', 'WithStatement', 'BinaryExpression[operator=in]'],
+    'vue/valid-v-for': 'off',
   },
 };
