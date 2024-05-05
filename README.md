@@ -2,7 +2,7 @@
 ### Built with Axios, Vuetify and Vuex.  
 
 ### Live showcase built & deployed it Vercel
-[Demo Link](https://acube-media.vercel.app/)
+[Demo Link](https://squad-nu.vercel.app/)
 ## Project setup
 Install packages
 ``npm install``\
