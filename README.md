@@ -1,24 +1,12 @@
-# squad
+# A simple football squad builder
+### Built with Axios, Vuetify and Vuex.  
 
+### Live showcase built & deployed it Vercel
+[Demo Link](https://acube-media.vercel.app/)
 ## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Install packages
+``npm install``\
+Run application on dev mode
+``npm run serve``\
+Create a production build
+``npm run build``
